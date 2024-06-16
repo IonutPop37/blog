@@ -1,16 +1,25 @@
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import { Container, Box, TextField, Button, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import DashboardLayout from '../../components/DashboardLayout';
 
-const NewArticle = () => {
-  const router = useRouter();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [author, setAuthor] = useState('');
-  const [error, setError] = useState('');
+// Define the type for the article form data
+interface ArticleFormData {
+  title: string;
+  description: string;
+  author: string;
+}
 
-  const handleSubmit = async (e) => {
+const NewArticle: React.FC = () => {
+  const router = useRouter();
+  // Initialize state with TypeScript generics
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [author, setAuthor] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  // Handle form submission
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     console.log({ title, description, author });
@@ -51,7 +60,7 @@ const NewArticle = () => {
             fullWidth
             margin="normal"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
             required
           />
           <TextField
@@ -59,9 +68,9 @@ const NewArticle = () => {
             fullWidth
             margin="normal"
             multiline
-            rows={4}
+            rows={20}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
             required
           />
           <FormControl fullWidth margin="normal" required>
@@ -69,7 +78,7 @@ const NewArticle = () => {
             <Select
               labelId="author-label"
               value={author}
-              onChange={(e) => setAuthor(e.target.value)}
+              onChange={(e: ChangeEvent<{ value: unknown }>) => setAuthor(e.target.value as string)}
             >
               <MenuItem value="test 1">Test 1</MenuItem>
               <MenuItem value="test 2">Test 2</MenuItem>

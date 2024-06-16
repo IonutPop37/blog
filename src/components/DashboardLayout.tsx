@@ -1,12 +1,19 @@
 import { useRouter } from 'next/router';
 import { Drawer, List, ListItem, ListItemText, AppBar, Toolbar, Typography, Box, CssBaseline } from '@mui/material';
+import { ReactNode } from 'react';
+
+// Define the type for the component props
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
 
 const drawerWidth = 240;
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const router = useRouter();
 
-  const handleNavigation = (path) => {
+  // Function to handle navigation
+  const handleNavigation = (path: string) => {
     router.push(path);
   };
 

@@ -1,9 +1,11 @@
+import React from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 
-const Dashboard = () => {
+// This is the main dashboard component
+const Dashboard: React.FC = () => {
   return (
     <DashboardLayout>
-      <h1>Welcome to the Blog Dashboard</h1>
+      <h1>Bine ati venit</h1>
     </DashboardLayout>
   );
 };

@@ -3,23 +3,35 @@ import { useRouter } from 'next/router';
 import { Container, Typography, Box, List, ListItem, ListItemText, Paper, Button, Grid } from '@mui/material';
 import DashboardLayout from '../../components/DashboardLayout';
 
-const ListArticles = () => {
-  const [articles, setArticles] = useState([]);
+// Define the type for an article
+interface Article {
+  id: number;
+  title: string;
+  description: string;
+  autor: string; 
+}
+
+const ListArticles: React.FC = () => {
+  // Initialize the state for articles with an empty array
+  const [articles, setArticles] = useState<Article[]>([]);
   const router = useRouter();
 
+  // Fetch articles from the API when the component mounts
   useEffect(() => {
     const fetchArticles = async () => {
       const res = await fetch('/api/articles');
       const data = await res.json();
+      console.log(data);
       setArticles(data);
     };
 
     fetchArticles();
   }, []);
 
-  const handleDelete = async (id) => {
+  // Handle deleting an article by its ID
+  const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`/api/articles?id=${id}`, {
+      const res = await fetch(`/api/articles/${id}`, {
         method: 'DELETE',
       });
 
@@ -33,7 +45,8 @@ const ListArticles = () => {
     }
   };
 
-  const truncateText = (text, maxLength) => {
+  // Truncate the text to a specified maximum length
+  const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) {
       return text;
     }
@@ -56,11 +69,14 @@ const ListArticles = () => {
                     secondary={
                       <>
                         <Typography component="span" variant="body2" color="textPrimary">
-                          {truncateText(article.description, 550)}
+                          {truncateText(article.description, 150)}
                         </Typography>
                         <br />
                         <Typography component="span" variant="body2" color="textSecondary">
                           Autor: {article.autor}
+                        </Typography>
+                        <Typography component="span" variant="body2" color="textSecondary">
+                          ID: {article.id}
                         </Typography>
                       </>
                     }
