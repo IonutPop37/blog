@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { Container, Typography, Box, List, ListItem, ListItemText, Paper, Button, Grid } from '@mui/material';
 import DashboardLayout from '../../components/DashboardLayout';
@@ -11,22 +11,13 @@ interface Article {
   autor: string; 
 }
 
-const ListArticles: React.FC = () => {
-  // Initialize the state for articles with an empty array
-  const [articles, setArticles] = useState<Article[]>([]);
+// Define the props type for the component
+interface ListArticlesProps {
+  articles: Article[];
+}
+
+const ListArticles: React.FC<ListArticlesProps> = ({ articles }) => {
   const router = useRouter();
-
-  // Fetch articles from the API when the component mounts
-  useEffect(() => {
-    const fetchArticles = async () => {
-      const res = await fetch('/api/articles');
-      const data = await res.json();
-      console.log(data);
-      setArticles(data);
-    };
-
-    fetchArticles();
-  }, []);
 
   // Handle deleting an article by its ID
   const handleDelete = async (id: number) => {
@@ -39,7 +30,7 @@ const ListArticles: React.FC = () => {
         throw new Error('Failed to delete article');
       }
 
-      setArticles(articles.filter(article => article.id !== id));
+      router.replace(router.asPath); // Refresh the data after deletion
     } catch (err) {
       console.error('Error:', err);
     }
@@ -101,6 +92,18 @@ const ListArticles: React.FC = () => {
       </Container>
     </DashboardLayout>
   );
+};
+
+// Fetch the list of articles on the server side and pass it as props to the component
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await fetch('http://localhost:3001/api/articles');
+  const articles = await res.json();
+
+  return {
+    props: {
+      articles,
+    },
+  };
 };
 
 export default ListArticles;
